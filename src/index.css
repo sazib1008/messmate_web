@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #FDFBF7;
+    color: #1E293B;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Epilogue', sans-serif;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E2BFB5;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #F25C2A;
+}
+
+/* Tactile touch interactions */
+.tactile-btn {
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.tactile-btn:active {
+  transform: scale(0.98);
+}
+
+/* Page fade-in on screen mount */
+@keyframes fadeInPage {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.page-fade-in {
+  animation: fadeInPage 0.22s ease forwards;
+}
+
+/* Accessible focus rings */
+*:focus-visible {
+  outline: 2px solid #F25C2A;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Print styles: hide nav shells, modals, and dev elements */
+@media print {
+  header, nav, footer,
+  [data-print="hidden"],
+  .print\:hidden {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  * {
+    box-shadow: none !important;
+  }
+}
