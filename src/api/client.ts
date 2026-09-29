@@ -13,7 +13,23 @@ export interface ApiError {
   error?: string;
 }
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+// Determine API endpoint with seamless fallback for Vercel production deployment
+const resolveBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_BACKEND_URL;
+  if (envUrl) {
+    if (envUrl.startsWith('http')) {
+      return envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
+    }
+    return envUrl;
+  }
+  // Default to live Render backend in production (e.g. Vercel deployment)
+  if (import.meta.env.PROD) {
+    return 'https://messmate-backend-nn3j.onrender.com/api';
+  }
+  return '/api';
+};
+
+const BASE_URL = resolveBaseUrl();
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem('messmate_token');

@@ -4,7 +4,7 @@ import { defineConfig, loadEnv } from 'vite'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const backendUrl = env.VITE_BACKEND_URL || 'http://localhost:8080'
+  const backendUrl = env.VITE_BACKEND_URL || 'https://messmate-backend-nn3j.onrender.com'
 
   return {
     plugins: [react()],
