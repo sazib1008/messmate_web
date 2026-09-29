@@ -242,7 +242,7 @@ export const StudentHomeScreen: React.FC<StudentHomeScreenProps> = ({
 
       {/* Cycle Status Banners */}
       {activeCycle?.status === 'EXPIRING' && (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-subtle">
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-subtle">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-800 shrink-0">
               <Calendar className="w-5 h-5" />
@@ -258,7 +258,7 @@ export const StudentHomeScreen: React.FC<StudentHomeScreenProps> = ({
           </div>
           <button
             onClick={onOpenDepositModal}
-            className="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shrink-0 transition-colors shadow-subtle"
+            className="w-full sm:w-auto px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shrink-0 transition-colors shadow-subtle text-center min-h-[40px] flex items-center justify-center"
           >
             Add Deposit
           </button>
@@ -266,7 +266,7 @@ export const StudentHomeScreen: React.FC<StudentHomeScreenProps> = ({
       )}
 
       {activeCycle?.status === 'COMPLETED' && (
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-center justify-between gap-4 shadow-subtle">
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-subtle">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700 shrink-0">
               <CheckCircle2 className="w-5 h-5" />
@@ -282,7 +282,7 @@ export const StudentHomeScreen: React.FC<StudentHomeScreenProps> = ({
           </div>
           <button
             onClick={onNavigateToAccount}
-            className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shrink-0 transition-colors shadow-subtle"
+            className="w-full sm:w-auto px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shrink-0 transition-colors shadow-subtle text-center min-h-[40px] flex items-center justify-center"
           >
             View Statement
           </button>

@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   body {
     background-color: #FDFBF7;
     color: #1E293B;
@@ -13,6 +18,14 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Epilogue', sans-serif;
   }
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Custom subtle scrollbar */

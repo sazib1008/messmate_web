@@ -520,8 +520,133 @@ export const ManagerExpenseScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* Expenses Table */}
-        <div className="overflow-x-auto">
+        {/* Mobile Card Conversion (< md) */}
+        <div className="md:hidden space-y-3 p-3">
+          {isLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-24 w-full rounded-card" />
+              <Skeleton className="h-24 w-full rounded-card" />
+            </div>
+          ) : filteredExpenses.length === 0 ? (
+            <div className="p-8 text-center text-slate-muted bg-canvas-tint/40 rounded-card border border-slate-border">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2 text-slate-400">
+                <Receipt className="w-6 h-6" />
+              </div>
+              <p className="font-bold text-sm text-slate-deep">No expenses found</p>
+              <p className="text-xs text-slate-muted mt-1">
+                {searchQuery || selectedCategory !== 'ALL'
+                  ? 'Try clearing your filters or search terms.'
+                  : 'Record your first expense by clicking "Add New Expense" above.'}
+              </p>
+            </div>
+          ) : (
+            filteredExpenses.map((exp) => {
+              const catConfig = CATEGORIES.find((c) => c.id === exp.category);
+              return (
+                <div
+                  key={exp.id}
+                  className="bg-white border border-slate-border rounded-card p-4 shadow-subtle flex flex-col gap-2.5"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span
+                      className={clsx(
+                        'inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold border',
+                        catConfig?.badgeStyle || 'bg-slate-100 text-slate-700 border-slate-200'
+                      )}
+                    >
+                      {catConfig?.shortLabel || exp.category}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-slate-muted">{exp.expenseDate}</span>
+                      <button
+                        type="button"
+                        onClick={() => setExpenseToDelete(exp)}
+                        className="min-w-[36px] min-h-[36px] flex items-center justify-center text-slate-400 hover:text-status-error hover:bg-status-error/10 rounded-full transition-colors"
+                        title="Delete expense"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h4 className="font-bold text-slate-deep text-sm leading-tight flex-1">{exp.title}</h4>
+                    <span className="font-display font-extrabold text-base text-slate-deep shrink-0">
+                      ৳{exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+
+                  {/* Accounting Allocation */}
+                  <div className="text-xs">
+                    {exp.category === 'INDIVIDUAL_DIRECT' && (
+                      <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-purple-50 text-purple-800 text-[11px] font-medium border border-purple-200 w-full">
+                        <UserCheck className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                        <span>
+                          Charged 100% to:{' '}
+                          <strong>
+                            {(() => {
+                              const target = members.find((m) => m.userId === exp.targetMemberId);
+                              const name = exp.targetMemberName || target?.fullName || 'Specific Member';
+                              const room = target?.roomNumber;
+                              return room ? `${name} (Room ${room})` : name;
+                            })()}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+
+                    {(exp.category === 'AD_HOC_SPECIAL' || exp.category === 'OTHER') && (
+                      <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-amber-50 text-amber-800 text-[11px] font-medium border border-amber-200 w-full">
+                        <Users className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>
+                          Opt-in Split:{' '}
+                          {exp.participantIds && exp.participantIds.length > 0 ? (
+                            <>
+                              <strong>{exp.participantIds.length}</strong> participants (৳
+                              {(exp.amount / exp.participantIds.length).toFixed(2)}/each)
+                            </>
+                          ) : (
+                            <span>All members (৳{(exp.amount / (members.length || 1)).toFixed(2)}/each)</span>
+                          )}
+                        </span>
+                      </div>
+                    )}
+
+                    {exp.category === 'FIXED_OVERHEAD' && (
+                      <span className="text-[11px] text-blue-700 font-medium">
+                        Equal 1/N overhead share among all active members
+                      </span>
+                    )}
+
+                    {exp.category === 'MEAL_VARIABLE' && (
+                      <span className="text-[11px] text-emerald-700 font-medium">
+                        Pooled meal cost → factors into meal rate
+                      </span>
+                    )}
+                  </div>
+
+                  {exp.notes && (
+                    <p className="text-[11px] text-slate-muted italic bg-canvas-tint/60 p-2 rounded">
+                      {exp.notes}
+                    </p>
+                  )}
+
+                  <div className="flex items-center justify-between text-[11px] text-slate-muted pt-1 border-t border-slate-border/50">
+                    <span>By: {exp.recordedByName}</span>
+                    {exp.receiptUrl && (
+                      <span className="text-terracotta underline font-medium">
+                        Receipt Ref: {exp.receiptUrl}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Expenses Table (Desktop / Tablet >= md) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-canvas-tint/90 border-b border-slate-border text-slate-deep">

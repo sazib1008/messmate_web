@@ -4,6 +4,7 @@ import {
   Search,
   AlertTriangle,
   UserX,
+  ShieldCheck,
   RefreshCw,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -354,8 +355,172 @@ export const ManagerMemberScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* Member Table */}
-        <div className="overflow-x-auto">
+        {/* Mobile Card Conversion (< md) */}
+        <div className="md:hidden space-y-3 p-3">
+          {isLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-28 w-full rounded-card" />
+              <Skeleton className="h-28 w-full rounded-card" />
+            </div>
+          ) : filteredMembers.length === 0 ? (
+            <div className="p-8 text-center text-slate-muted bg-canvas-tint/40 rounded-card border border-slate-border">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2 text-slate-400">
+                <Users className="w-6 h-6" />
+              </div>
+              <p className="font-bold text-sm text-slate-deep">No members found</p>
+            </div>
+          ) : (
+            filteredMembers.map((m) => {
+              const fin = memberFinancialMap.get(m.userId);
+              const isDelinquent = fin?.hasNegativeBalance || false;
+              const isPrimary = m.role === 'PRIMARY_MANAGER';
+              const isSelf = m.email === user?.email;
+
+              return (
+                <div
+                  key={m.id}
+                  className={clsx(
+                    'bg-white border rounded-card p-4 shadow-subtle flex flex-col gap-3',
+                    isDelinquent ? 'border-red-200 bg-red-50/20' : 'border-slate-border'
+                  )}
+                >
+                  {/* Header: Member Avatar, Name, Badges */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-full bg-terracotta-container/60 text-terracotta font-bold text-sm flex items-center justify-center shrink-0">
+                        {m.fullName?.charAt(0) || 'U'}
+                      </div>
+                      <div>
+                        <span className="block font-bold text-sm text-slate-deep leading-tight">
+                          {m.fullName}
+                        </span>
+                        <span className="block text-[11px] text-slate-muted">Room {m.roomNumber || 'N/A'}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Badge
+                        variant={
+                          isPrimary
+                            ? 'manager'
+                            : m.role === 'MANAGER'
+                            ? 'chef'
+                            : 'student'
+                        }
+                        size="sm"
+                      >
+                        {m.role}
+                      </Badge>
+                      <Badge
+                        variant={m.status === 'ACTIVE' ? 'success' : 'neutral'}
+                        size="sm"
+                      >
+                        {m.status}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Contact & Room Edit Row */}
+                  <div className="flex items-center justify-between text-xs text-slate-muted bg-canvas-tint/60 p-2.5 rounded-lg border border-slate-border/50">
+                    <div className="truncate pr-2">
+                      <p className="truncate font-medium text-slate-deep">{m.email}</p>
+                      {m.phone && <p className="text-[11px]">{m.phone}</p>}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingRoomMember(m);
+                        setRoomInput(m.roomNumber || '');
+                      }}
+                      className="text-xs text-terracotta font-bold bg-terracotta/10 hover:bg-terracotta/20 px-2.5 py-1.5 rounded-button transition-colors shrink-0 min-h-[36px] flex items-center"
+                    >
+                      Edit Room
+                    </button>
+                  </div>
+
+                  {/* Financials & Units Row */}
+                  <div className="grid grid-cols-3 gap-2 text-center p-2.5 rounded-lg bg-canvas-tint/40 border border-slate-border/50">
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Units</span>
+                      <span className="font-bold text-xs text-slate-deep">
+                        {fin ? `${fin.totalMemberUnits.toFixed(1)}` : '—'}
+                      </span>
+                      {fin && fin.totalGuestUnits > 0 && (
+                        <span className="text-[9px] text-slate-muted block">+{fin.totalGuestUnits} guest</span>
+                      )}
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Deposits</span>
+                      <span className="font-bold text-xs text-slate-deep">
+                        {fin ? `৳${fin.totalDeposits.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : '—'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Balance</span>
+                      {fin ? (
+                        <span
+                          className={clsx(
+                            'font-display font-extrabold text-xs px-1.5 py-0.5 rounded-full inline-block',
+                            isDelinquent ? 'bg-red-100 text-status-error' : 'text-emerald-700 bg-emerald-50'
+                          )}
+                        >
+                          {fin.netBalance >= 0 ? '+' : ''}৳{fin.netBalance.toFixed(0)}
+                        </span>
+                      ) : (
+                        '—'
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Actions on Mobile */}
+                  {!isPrimary && !isSelf && (
+                    <div className="flex items-center gap-2 pt-1 border-t border-slate-border/50">
+                      {m.role === 'STUDENT' ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActionMember(m);
+                            setActionType('promote');
+                          }}
+                          className="flex-1 min-h-[40px] px-3 rounded-button text-xs font-semibold bg-terracotta-container/60 text-terracotta hover:bg-terracotta hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>Promote to Manager</span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActionMember(m);
+                            setActionType('demote');
+                          }}
+                          className="flex-1 min-h-[40px] px-3 rounded-button text-xs font-semibold bg-slate-100 text-slate-muted hover:bg-slate-200 transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <span>Demote to Student</span>
+                        </button>
+                      )}
+                      {m.status === 'ACTIVE' && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActionMember(m);
+                            setActionType('remove');
+                          }}
+                          className="min-h-[40px] px-3 rounded-button text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors flex items-center justify-center gap-1"
+                        >
+                          <UserX className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Member Table (Desktop / Tablet >= md) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-canvas-tint/90 border-b border-slate-border text-slate-deep">

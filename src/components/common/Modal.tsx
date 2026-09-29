@@ -59,13 +59,13 @@ export const Modal: React.FC<ModalProps> = ({
         aria-hidden="true"
       />
 
-      {/* Centering Wrapper: perfectly centers modal horizontally and vertically with safe viewport margins */}
-      <div className="flex min-h-full items-center justify-center p-4 sm:p-6 text-center">
+      {/* Centering / Bottom-sheet Wrapper: slides from bottom on mobile, centers on tablet/desktop */}
+      <div className="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-6 text-center">
         {/* Modal Dialog Card */}
         <div
           className={twMerge(
             clsx(
-              'relative w-full bg-white rounded-card border border-slate-border shadow-level2 text-left z-10 my-auto flex flex-col max-h-[calc(100vh-3rem)] overflow-hidden transition-all transform duration-200',
+              'relative w-full bg-white rounded-t-2xl sm:rounded-card border-t sm:border border-slate-border shadow-level2 text-left z-10 flex flex-col max-h-[90dvh] sm:max-h-[calc(100vh-3rem)] pb-safe sm:pb-0 overflow-hidden transition-all transform duration-200',
               maxWidthStyles[maxWidth],
               className
             )
@@ -73,10 +73,10 @@ export const Modal: React.FC<ModalProps> = ({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-border/50 shrink-0 bg-white">
-            <div>
+          <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-border/50 shrink-0 bg-white">
+            <div className="pr-4">
               {title && (
-                <h3 className="font-display font-bold text-lg text-slate-deep">
+                <h3 className="font-display font-bold text-base sm:text-lg text-slate-deep leading-snug">
                   {title}
                 </h3>
               )}
@@ -87,7 +87,7 @@ export const Modal: React.FC<ModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 -mr-2 text-slate-muted hover:text-slate-deep rounded-full hover:bg-canvas-tint transition-colors"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-muted hover:text-slate-deep rounded-full hover:bg-canvas-tint transition-colors"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -95,7 +95,7 @@ export const Modal: React.FC<ModalProps> = ({
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto flex-1">{children}</div>
+          <div className="p-5 sm:p-6 overflow-y-auto flex-1">{children}</div>
         </div>
       </div>
     </div>

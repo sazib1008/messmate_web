@@ -813,8 +813,140 @@ export const ManagerDepositScreen: React.FC = () => {
             </button>
           </div>
 
-          {/* Read-only History Table */}
-          <div className="overflow-x-auto rounded-lg border border-slate-border">
+          {/* Mobile Card Conversion (< md) */}
+          <div className="md:hidden space-y-3">
+            {isLoading ? (
+              <div className="space-y-3 p-3">
+                <Skeleton className="h-24 w-full rounded-card" />
+                <Skeleton className="h-24 w-full rounded-card" />
+              </div>
+            ) : filteredHistory.length === 0 ? (
+              <div className="p-8 text-center text-slate-muted bg-canvas-tint/40 rounded-card border border-slate-border">
+                <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2 text-slate-400">
+                  <Receipt className="w-6 h-6" />
+                </div>
+                <p className="font-bold text-sm text-slate-deep">No history records found</p>
+                <p className="text-xs text-slate-muted mt-1 max-w-sm mx-auto">
+                  {historyDeposits.length === 0
+                    ? 'No approved or rejected deposits recorded yet.'
+                    : 'No deposits match your current filters or search query.'}
+                </p>
+                {(historyStatusFilter !== 'ALL' || methodFilter !== 'ALL' || searchQuery !== '') && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setHistoryStatusFilter('ALL');
+                      setMethodFilter('ALL');
+                      setSearchQuery('');
+                    }}
+                    className="mt-3 text-xs"
+                  >
+                    Reset Filters
+                  </Button>
+                )}
+              </div>
+            ) : (
+              filteredHistory.map((dep) => (
+                <div
+                  key={dep.id}
+                  className="bg-white border border-slate-border rounded-card p-4 shadow-subtle flex flex-col gap-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-terracotta-container/60 text-terracotta flex items-center justify-center font-bold text-xs shrink-0">
+                        {dep.userFullName?.charAt(0) || 'U'}
+                      </div>
+                      <div>
+                        <span className="block font-bold text-sm text-slate-deep leading-tight">
+                          {dep.userFullName}
+                        </span>
+                        <span className="block text-[11px] text-slate-muted">Room {dep.roomNumber || 'N/A'}</span>
+                      </div>
+                    </div>
+                    <Badge
+                      variant={dep.status === 'APPROVED' ? 'success' : 'error'}
+                      size="sm"
+                    >
+                      {dep.status === 'APPROVED' && <CheckCircle2 className="w-3 h-3 mr-1 inline" />}
+                      {dep.status === 'REJECTED' && <XCircle className="w-3 h-3 mr-1 inline" />}
+                      {dep.status}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between bg-canvas-tint/70 p-2.5 rounded-lg border border-slate-border/50">
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-slate-muted block">Amount</span>
+                      <span
+                        className={clsx(
+                          'font-display font-extrabold text-base',
+                          dep.status === 'APPROVED'
+                            ? 'text-emerald-700'
+                            : 'text-slate-400 line-through'
+                        )}
+                      >
+                        +৳{dep.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] uppercase font-bold text-slate-muted block">Method</span>
+                      {renderMethodBadge(dep.paymentMethod)}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs text-slate-muted">
+                    <div>
+                      <span className="block text-[10px] font-semibold text-slate-400 uppercase">Date &amp; Time</span>
+                      <span className="text-slate-deep font-medium">{formatDhakaDateTime(dep.createdAt || dep.depositDate)}</span>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] font-semibold text-slate-400 uppercase">Trx Ref</span>
+                      {dep.transactionRef ? (
+                        <div className="inline-flex items-center gap-1 font-mono font-semibold text-slate-deep text-[11px]">
+                          <span className="truncate max-w-[100px]">{dep.transactionRef}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyTrx(dep.transactionRef!, dep.id)}
+                            className="min-w-[28px] min-h-[28px] flex items-center justify-center text-slate-400 hover:text-slate-700 transition-colors"
+                            title="Copy Trx Ref"
+                          >
+                            {copiedId === dep.id ? (
+                              <Check className="w-3 h-3 text-emerald-600" />
+                            ) : (
+                              <Copy className="w-3 h-3" />
+                            )}
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="italic">Cash / Direct</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {dep.approvedByName && (
+                    <div className="text-[11px] text-sage font-medium bg-sage-tint/30 px-2 py-1 rounded">
+                      Verified by: {dep.approvedByName}
+                    </div>
+                  )}
+
+                  <div className="pt-1 border-t border-slate-border/50">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedDetailsDeposit(dep)}
+                      className="w-full min-h-[40px] text-xs justify-center"
+                    >
+                      <Eye className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
+                      View Deposit Receipt
+                    </Button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Read-only History Table (Desktop / Tablet >= md) */}
+          <div className="hidden md:block overflow-x-auto rounded-lg border border-slate-border">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-canvas-tint/90 border-b border-slate-border text-slate-deep">

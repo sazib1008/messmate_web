@@ -467,7 +467,7 @@ export const ManagerSettingsScreen: React.FC = () => {
                       </div>
 
                       {/* 4 Editable Form Fields */}
-                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         <div>
                           <label className="block text-[11px] font-bold text-slate-muted mb-1 flex items-center gap-1">
                             <Clock className="w-3 h-3 text-slate-400" />
@@ -788,7 +788,7 @@ export const ManagerSettingsScreen: React.FC = () => {
 
           {calculation && (
             <div className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-canvas-tint p-3.5 rounded-card border border-slate-border">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 bg-canvas-tint p-3.5 rounded-card border border-slate-border">
                 <div>
                   <span className="text-slate-muted block text-[11px]">Total Expenses</span>
                   <span className="font-display font-extrabold text-sm text-slate-deep">

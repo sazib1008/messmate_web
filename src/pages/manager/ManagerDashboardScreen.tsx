@@ -262,7 +262,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
       {/* Urgent Operational Alerts */}
       <div className="space-y-3">
         {activeCycle?.status === 'EXPIRING' && (
-          <div className="bg-amber-500/10 border border-amber-500/30 rounded-card p-4 flex items-center justify-between gap-4 shadow-subtle">
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-subtle">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-button bg-amber-500/20 flex items-center justify-center text-amber-700 shrink-0">
                 <Calendar className="w-5 h-5" />
@@ -280,7 +280,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
               variant="primary"
               size="sm"
               onClick={() => onNavigateTab('settings')}
-              className="shrink-0 bg-amber-600 hover:bg-amber-700 text-white"
+              className="w-full sm:w-auto justify-center shrink-0 bg-amber-600 hover:bg-amber-700 text-white"
             >
               Manage Cycle
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -289,7 +289,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
         )}
 
         {activeCycle?.status === 'COMPLETED' && (
-          <div className="bg-blue-50 border border-blue-200 rounded-card p-4 flex items-center justify-between gap-4 shadow-subtle">
+          <div className="bg-blue-50 border border-blue-200 rounded-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-subtle">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-button bg-blue-100 flex items-center justify-center text-blue-700 shrink-0">
                 <CheckCircle2 className="w-5 h-5" />
@@ -307,7 +307,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
               variant="primary"
               size="sm"
               onClick={() => onNavigateTab('settings')}
-              className="shrink-0"
+              className="w-full sm:w-auto justify-center shrink-0"
             >
               Cycle Settings
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -315,7 +315,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
           </div>
         )}
         {pendingDeposits.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-card p-4 flex items-center justify-between gap-4 shadow-subtle">
+          <div className="bg-amber-50 border border-amber-200 rounded-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-subtle">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-button bg-amber-100 flex items-center justify-center text-amber-800 shrink-0">
                 <CreditCard className="w-5 h-5" />
@@ -333,7 +333,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
               variant="primary"
               size="sm"
               onClick={() => onNavigateTab('deposits')}
-              className="shrink-0"
+              className="w-full sm:w-auto justify-center shrink-0"
             >
               Review Now
               <ChevronRight className="w-4 h-4 ml-1" />
@@ -342,7 +342,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
         )}
 
         {delinquentMembers.length > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-card p-4 flex items-center justify-between gap-4 shadow-subtle">
+          <div className="bg-red-50 border border-red-200 rounded-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 shadow-subtle">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-button bg-red-100 flex items-center justify-center text-red-700 shrink-0">
                 <AlertCircle className="w-5 h-5" />
@@ -705,7 +705,7 @@ export const ManagerDashboardScreen: React.FC<ManagerDashboardScreenProps> = ({
       )}
 
       {/* Quick Launchpad Action Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <button
           onClick={() => onNavigateTab('expenses')}
           className="p-5 rounded-card bg-white border border-slate-border hover:border-terracotta shadow-subtle hover:shadow-card transition-all text-left group tactile-btn"

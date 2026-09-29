@@ -480,64 +480,121 @@ export const StudentAccountScreen: React.FC<StudentAccountScreenProps> = ({
                   </p>
                 </div>
               ) : (
-                <div className="overflow-x-auto mt-4">
-                  <table className="w-full text-left text-xs font-body">
-                    <thead>
-                      <tr className="border-b border-slate-border/60 text-slate-muted uppercase tracking-wider text-[11px]">
-                        <th className="py-3 px-3">Date</th>
-                        <th className="py-3 px-3">Category</th>
-                        <th className="py-3 px-3">Description</th>
-                        <th className="py-3 px-3 text-right">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-border/40">
-                      {expenses.map((exp) => {
-                        const meta = CATEGORY_META[exp.category] || CATEGORY_META.MEAL_VARIABLE;
-                        return (
-                          <tr key={exp.id} className="hover:bg-canvas-tint/30 transition-colors">
-                            <td className="py-3.5 px-3 font-semibold text-slate-deep whitespace-nowrap">
+                <>
+                  {/* Mobile Expense Cards (< md) */}
+                  <div className="md:hidden space-y-3 mt-4">
+                    {expenses.map((exp) => {
+                      const meta = CATEGORY_META[exp.category] || CATEGORY_META.MEAL_VARIABLE;
+                      return (
+                        <div
+                          key={exp.id}
+                          className="bg-canvas-tint/40 border border-slate-border/80 rounded-card p-3.5 shadow-subtle flex flex-col gap-2"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${meta.bg} ${meta.colour}`}
+                            >
+                              {meta.label}
+                            </span>
+                            <span className="text-xs text-slate-muted">
                               {new Date(exp.expenseDate).toLocaleDateString('en-US', {
                                 month: 'short',
                                 day: 'numeric',
                                 year: 'numeric',
                               })}
-                            </td>
-                            <td className="py-3.5 px-3">
-                              <span
-                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${meta.bg} ${meta.colour}`}
-                              >
-                                {meta.label}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-3">
-                              <span className="font-medium text-slate-deep">{exp.title}</span>
+                            </span>
+                          </div>
+
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0 flex-1">
+                              <h5 className="font-semibold text-sm text-slate-deep leading-tight">
+                                {exp.title}
+                              </h5>
                               {exp.notes && (
-                                <span className="block text-[11px] text-slate-muted mt-0.5 truncate max-w-[200px]">
+                                <p className="text-[11px] text-slate-muted mt-0.5 italic">
                                   {exp.notes}
-                                </span>
+                                </p>
                               )}
-                            </td>
-                            <td className="py-3.5 px-3 text-right font-display font-bold text-slate-deep whitespace-nowrap">
+                            </div>
+                            <span className="font-display font-bold text-sm text-slate-deep shrink-0">
                               ৳ {exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                    <tfoot>
-                      <tr className="border-t-2 border-slate-border bg-canvas-tint/50">
-                        <td colSpan={3} className="py-3 px-3 font-bold text-slate-deep text-xs">
-                          Total Cycle Expenses
-                        </td>
-                        <td className="py-3 px-3 text-right font-display font-extrabold text-slate-deep text-sm">
-                          ৳ {expenses
-                            .reduce((s, e) => s + e.amount, 0)
-                            .toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                        </td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* Total Card on Mobile */}
+                    <div className="bg-canvas-tint p-3.5 rounded-card border-2 border-slate-border flex items-center justify-between">
+                      <span className="font-bold text-xs text-slate-deep">Total Cycle Expenses</span>
+                      <span className="font-display font-extrabold text-sm text-slate-deep">
+                        ৳ {expenses
+                          .reduce((s, e) => s + e.amount, 0)
+                          .toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Desktop / Tablet Expense Table (>= md) */}
+                  <div className="hidden md:block overflow-x-auto mt-4">
+                    <table className="w-full text-left text-xs font-body">
+                      <thead>
+                        <tr className="border-b border-slate-border/60 text-slate-muted uppercase tracking-wider text-[11px]">
+                          <th className="py-3 px-3">Date</th>
+                          <th className="py-3 px-3">Category</th>
+                          <th className="py-3 px-3">Description</th>
+                          <th className="py-3 px-3 text-right">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-border/40">
+                        {expenses.map((exp) => {
+                          const meta = CATEGORY_META[exp.category] || CATEGORY_META.MEAL_VARIABLE;
+                          return (
+                            <tr key={exp.id} className="hover:bg-canvas-tint/30 transition-colors">
+                              <td className="py-3.5 px-3 font-semibold text-slate-deep whitespace-nowrap">
+                                {new Date(exp.expenseDate).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })}
+                              </td>
+                              <td className="py-3.5 px-3">
+                                <span
+                                  className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${meta.bg} ${meta.colour}`}
+                                >
+                                  {meta.label}
+                                </span>
+                              </td>
+                              <td className="py-3.5 px-3">
+                                <span className="font-medium text-slate-deep">{exp.title}</span>
+                                {exp.notes && (
+                                  <span className="block text-[11px] text-slate-muted mt-0.5 truncate max-w-[200px]">
+                                    {exp.notes}
+                                  </span>
+                                )}
+                              </td>
+                              <td className="py-3.5 px-3 text-right font-display font-bold text-slate-deep whitespace-nowrap">
+                                ৳ {exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                      <tfoot>
+                        <tr className="border-t-2 border-slate-border bg-canvas-tint/50">
+                          <td colSpan={3} className="py-3 px-3 font-bold text-slate-deep text-xs">
+                            Total Cycle Expenses
+                          </td>
+                          <td className="py-3 px-3 text-right font-display font-extrabold text-slate-deep text-sm">
+                            ৳ {expenses
+                              .reduce((s, e) => s + e.amount, 0)
+                              .toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </>
               )}
 
               {/* Informational note about how expenses affect the rate */}
@@ -578,64 +635,129 @@ export const StudentAccountScreen: React.FC<StudentAccountScreenProps> = ({
               No deposit records found. Click "Top Up Deposit" above to record your advance payment.
             </div>
           ) : (
-            <div className="overflow-x-auto mt-4">
-              <table className="w-full text-left text-xs font-body">
-                <thead>
-                  <tr className="border-b border-slate-border/60 text-slate-muted uppercase tracking-wider text-[11px]">
-                    <th className="py-3 px-3">Date</th>
-                    <th className="py-3 px-3">Amount</th>
-                    <th className="py-3 px-3">Method</th>
-                    <th className="py-3 px-3">Trx ID / Ref</th>
-                    <th className="py-3 px-3">Status</th>
-                    <th className="py-3 px-3">Reviewed By</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-border/40">
-                  {deposits.map((dep) => (
-                    <tr key={dep.id} className="hover:bg-canvas-tint/30 transition-colors">
-                      <td className="py-3.5 px-3 font-semibold text-slate-deep">
+            <>
+              {/* Mobile Deposit History Cards (< md) */}
+              <div className="md:hidden space-y-3 mt-4">
+                {deposits.map((dep) => (
+                  <div
+                    key={dep.id}
+                    className="bg-canvas-tint/40 border border-slate-border/80 rounded-card p-3.5 shadow-subtle flex flex-col gap-2.5"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs text-slate-muted font-medium">
                         {new Date(dep.depositDate).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric',
                         })}
-                      </td>
-                      <td className="py-3.5 px-3 font-display font-bold text-slate-deep">
-                        ৳ {dep.amount.toFixed(2)}
-                      </td>
-                      <td className="py-3.5 px-3">
-                        <span className="px-2 py-0.5 rounded-full bg-canvas-tint text-slate-deep font-semibold border border-slate-border/40">
-                          {dep.paymentMethod}
+                      </span>
+                      {dep.status === 'APPROVED' && (
+                        <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                          <CheckCircle2 className="w-3 h-3" /> Approved
                         </span>
-                      </td>
-                      <td className="py-3.5 px-3 font-mono text-slate-muted">
-                        {dep.transactionRef || '—'}
-                      </td>
-                      <td className="py-3.5 px-3">
-                        {dep.status === 'APPROVED' && (
-                          <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Approved
-                          </span>
-                        )}
-                        {dep.status === 'PENDING' && (
-                          <span className="inline-flex items-center gap-1 text-amber-700 font-bold">
-                            <Clock className="w-3.5 h-3.5" /> Pending Review
-                          </span>
-                        )}
-                        {dep.status === 'REJECTED' && (
-                          <span className="inline-flex items-center gap-1 text-status-error font-bold">
-                            <XCircle className="w-3.5 h-3.5" /> Rejected
-                          </span>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-3 text-slate-muted">
-                        {dep.approvedByName || '—'}
-                      </td>
+                      )}
+                      {dep.status === 'PENDING' && (
+                        <span className="inline-flex items-center gap-1 text-[11px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                          <Clock className="w-3 h-3" /> Pending Review
+                        </span>
+                      )}
+                      {dep.status === 'REJECTED' && (
+                        <span className="inline-flex items-center gap-1 text-[11px] text-status-error font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                          <XCircle className="w-3 h-3" /> Rejected
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-baseline justify-between gap-2">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-muted block">Amount</span>
+                        <span className="font-display font-extrabold text-base text-slate-deep">
+                          ৳ {dep.amount.toFixed(2)}
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full bg-canvas-tint text-slate-deep font-semibold text-xs border border-slate-border/60">
+                        {dep.paymentMethod}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-muted pt-2 border-t border-slate-border/50">
+                      <div>
+                        <span className="block text-[10px] uppercase font-semibold text-slate-400">Trx Ref</span>
+                        <span className="font-mono text-slate-deep font-semibold truncate block">
+                          {dep.transactionRef || 'Cash / Direct'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="block text-[10px] uppercase font-semibold text-slate-400">Reviewed By</span>
+                        <span className="text-slate-deep truncate block">
+                          {dep.approvedByName || 'Pending'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop / Tablet Deposit Table (>= md) */}
+              <div className="hidden md:block overflow-x-auto mt-4">
+                <table className="w-full text-left text-xs font-body">
+                  <thead>
+                    <tr className="border-b border-slate-border/60 text-slate-muted uppercase tracking-wider text-[11px]">
+                      <th className="py-3 px-3">Date</th>
+                      <th className="py-3 px-3">Amount</th>
+                      <th className="py-3 px-3">Method</th>
+                      <th className="py-3 px-3">Trx ID / Ref</th>
+                      <th className="py-3 px-3">Status</th>
+                      <th className="py-3 px-3">Reviewed By</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y divide-slate-border/40">
+                    {deposits.map((dep) => (
+                      <tr key={dep.id} className="hover:bg-canvas-tint/30 transition-colors">
+                        <td className="py-3.5 px-3 font-semibold text-slate-deep">
+                          {new Date(dep.depositDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </td>
+                        <td className="py-3.5 px-3 font-display font-bold text-slate-deep">
+                          ৳ {dep.amount.toFixed(2)}
+                        </td>
+                        <td className="py-3.5 px-3">
+                          <span className="px-2 py-0.5 rounded-full bg-canvas-tint text-slate-deep font-semibold border border-slate-border/40">
+                            {dep.paymentMethod}
+                          </span>
+                        </td>
+                        <td className="py-3.5 px-3 font-mono text-slate-muted">
+                          {dep.transactionRef || '—'}
+                        </td>
+                        <td className="py-3.5 px-3">
+                          {dep.status === 'APPROVED' && (
+                            <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
+                              <CheckCircle2 className="w-3.5 h-3.5" /> Approved
+                            </span>
+                          )}
+                          {dep.status === 'PENDING' && (
+                            <span className="inline-flex items-center gap-1 text-amber-700 font-bold">
+                              <Clock className="w-3.5 h-3.5" /> Pending Review
+                            </span>
+                          )}
+                          {dep.status === 'REJECTED' && (
+                            <span className="inline-flex items-center gap-1 text-status-error font-bold">
+                              <XCircle className="w-3.5 h-3.5" /> Rejected
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3.5 px-3 text-slate-muted">
+                          {dep.approvedByName || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -685,13 +807,14 @@ export const StudentAccountScreen: React.FC<StudentAccountScreenProps> = ({
             onChange={(e) => setDepositNotes(e.target.value)}
           />
 
-          <div className="pt-2 flex justify-end gap-2">
+          <div className="pt-2 flex flex-col-reverse sm:flex-row justify-end gap-2">
             <Button
               type="button"
               variant="outline"
               size="md"
               onClick={() => setIsDepositModalOpen(false)}
               disabled={isSubmitting}
+              className="w-full sm:w-auto min-h-[44px] justify-center"
             >
               Cancel
             </Button>
@@ -700,6 +823,7 @@ export const StudentAccountScreen: React.FC<StudentAccountScreenProps> = ({
               variant="primary"
               size="md"
               isLoading={isSubmitting}
+              className="w-full sm:w-auto min-h-[44px] justify-center"
             >
               Submit Deposit
             </Button>

@@ -144,7 +144,7 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
             <button
               onClick={logout}
               title="Sign Out"
-              className="p-2 text-slate-muted hover:text-status-error hover:bg-red-50 rounded-full transition-colors ml-1"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-muted hover:text-status-error hover:bg-red-50 rounded-full transition-colors ml-1"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -153,10 +153,10 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
       </header>
 
       {/* Content Area */}
-      <main className="flex-1 pb-24 md:pb-12">{children}</main>
+      <main className="flex-1 pb-28 md:pb-12">{children}</main>
 
       {/* Mobile Bottom Dock Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-border px-4 py-2 flex items-center justify-around shadow-level2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-border px-2 pt-1.5 pb-safe min-h-[64px] shadow-level2 flex items-center justify-around">
         {navItems.map((item) => {
           const isActive = currentTab === item.id;
           return (
@@ -164,19 +164,26 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
               key={item.id}
               onClick={() => onTabChange(item.id)}
               className={clsx(
-                'flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-150 tactile-btn',
+                'flex-1 max-w-[80px] flex flex-col items-center justify-center py-1 px-1 rounded-xl transition-all duration-150 tactile-btn shrink-0',
                 isActive ? 'text-terracotta font-bold' : 'text-slate-muted font-medium'
               )}
             >
               <div
                 className={clsx(
-                  'w-8 h-8 rounded-full flex items-center justify-center mb-0.5 transition-colors',
+                  'w-8 h-8 rounded-full flex items-center justify-center mb-0.5 transition-colors shrink-0',
                   isActive ? 'bg-terracotta-container/60 text-terracotta' : 'text-slate-muted'
                 )}
               >
                 {item.icon}
               </div>
-              <span className="text-[10px] tracking-tight">{item.label}</span>
+              <span
+                className={clsx(
+                  'text-xs font-semibold tracking-tight block shrink-0 text-center leading-none',
+                  isActive ? 'text-terracotta font-bold' : 'text-slate-600'
+                )}
+              >
+                {item.label}
+              </span>
             </button>
           );
         })}
