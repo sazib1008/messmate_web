@@ -124,10 +124,10 @@ export const StudentHomeScreen: React.FC<StudentHomeScreenProps> = ({
   const mySummary = calculation?.memberSummaries.find((m) => m.userId === user?.id);
   const isRateVolatile = calculation?.isRateVolatile || (!calculation?.final && (calculation?.totalCountedUnits ?? 0) < 15);
 
-  // Helper to check if a meal session is ON for today
+  // Helper to check if a meal session is ON for today (resolved by backend EffectiveMealService)
   const isSessionOn = (session: 'BREAKFAST' | 'LUNCH' | 'DINNER'): boolean => {
     const found = todayMeals.find((m) => m.session === session);
-    return found ? found.status === 'ON' : true; // default ON in mess system
+    return found ? found.status === 'ON' : false;
   };
 
   const handleToggleMeal = async (session: 'BREAKFAST' | 'LUNCH' | 'DINNER', newStatus: boolean) => {
